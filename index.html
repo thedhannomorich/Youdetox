@@ -244,8 +244,6 @@
             line-height: 1.5;
         }
 
-        /* REMOVED: Refresh protection overlay - Using browser default only */
-
         /* Footer */
         footer {
             margin-top: 30px;
@@ -324,9 +322,6 @@
             <p class="subtitle">You are now safe from distraction and cookie.</p>
         </header>
         
-        <!-- Spacer element that will expand when container is minimized -->
-        <div class="minimized-spacer" id="minimizedSpacer"></div>
-        
         <div class="link-container" id="linkContainer">
             <form class="link-form" id="videoForm">
                 <div class="form-header" id="formHeader">
@@ -373,8 +368,6 @@
         const videoPlaceholder = document.getElementById('videoPlaceholder');
         const ytPlayer = document.getElementById('ytPlayer');
         const linkContainer = document.getElementById('linkContainer');
-        const formHeader = document.getElementById('formHeader');
-        const minimizedSpacer = document.getElementById('minimizedSpacer');
         
         // Track if we have a video loaded
         let videoLoaded = false;
@@ -421,8 +414,7 @@
                 videoContainer.classList.add('show');
             }, 50);
             
-            // Minimize the link container with spacer
-            minimizeLinkContainer();
+            // LINK CONTAINER WILL NOT MINIMIZE - REMOVED THAT FUNCTION CALL
             
             // Set video loaded flag
             videoLoaded = true;
@@ -432,30 +424,6 @@
                 videoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 500);
         });
-        
-        // Function to minimize link container with spacer
-        function minimizeLinkContainer() {
-            setTimeout(() => {
-                // Calculate the height of the minimized container
-                const containerHeight = linkContainer.offsetHeight;
-                
-                // Activate the spacer first
-                minimizedSpacer.classList.add('active');
-                
-                // Then minimize the container
-                setTimeout(() => {
-                    linkContainer.classList.add('minimized');
-                    formHeader.classList.add('minimized');
-                }, 50);
-            }, 300);
-        }
-        
-        // Function to restore link container
-        function restoreLinkContainer() {
-            linkContainer.classList.remove('minimized');
-            formHeader.classList.remove('minimized');
-            minimizedSpacer.classList.remove('active');
-        }
         
         // Extract YouTube video ID from various URL formats
         function extractVideoId(url) {
@@ -528,9 +496,6 @@
             videoContainer.classList.remove('show');
             videoContainer.style.display = 'none';
             
-            // Restore link container
-            restoreLinkContainer();
-            
             // Clear inputs
             videoUrl.value = '';
             
@@ -549,6 +514,7 @@
         // Initialize page on load
         window.addEventListener('load', function() {
             resetPage();
+        });
         
         // Handle back/forward browser navigation
         window.addEventListener('pageshow', function(event) {
@@ -573,22 +539,12 @@
             
             // Escape to reset
             if (e.key === 'Escape' && videoLoaded) {
-                // Optionally add a reset functionality
-                // resetPage();
+                resetPage();
             }
         });
         
         // Improve mobile experience
         document.addEventListener('touchstart', function() {}, {passive: true});
-        
-        // Fix for iOS Safari 100vh issue
-        function setVH() {
-            const vh = window.innerHeight * 0.01;
-            document.documentElement.style.setProperty('--vh', `${vh}px`);
-        }
-        
-        setVH();
-        window.addEventListener('resize', setVH);
     </script>
 </body>
 </html>
