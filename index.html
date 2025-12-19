@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Youdetox</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, black);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            position: relative;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+            background: darkgrey;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-weight: 300;
+            font-size: 1.1rem;
+            color: #a0a0c0;
+            margin-bottom: 20px;
+        }
+
+        /* Link box styles - FIXED VERSION */
+        .link-container {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .link-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .form-header h2 {
+            font-weight: 600;
+            font-size: 1.4rem;
+            color: #ffffff;
+        }
+
+        .url-input-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: 500;
+            color: #d0d0e0;
+            font-size: 0.95rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            color: darkgrey;
+            font-size: 1.2rem;
+            z-index: 1;
+        }
+
+        #videoUrl {
+            width: 100%;
+            padding: 16px 16px 16px 50px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            color: #fff;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        #videoUrl:focus {
+            border-color: #ff0000;
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.2);
+        }
+
+        #videoUrl::placeholder {
+            color: #a0a0c0;
+        }
+
+        .submit-btn {
+            background: linear-gradient(90deg, darkgrey);
+            color: black;
+            border: none;
+            padding: 16px 30px;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(90deg, darkgrey);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn i {
+            font-size: 1.2rem;
+        }
+
+        /* Video container styles */
+        .video-container {
+            width: 100%;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            margin-top: 10px;
+        }
+
+        .video-container.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .video-placeholder i {
+            font-size: 4rem;
+            color: darkgrey;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .video-placeholder h3 {
+            font-weight: 600;
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .video-placeholder p {
+            font-weight: 300;
+            color: #a0a0c0;
+            max-width: 500px;
+            line-height: 1.5;
+        }
+
+        /* REMOVED: Refresh protection overlay - Using browser default only */
+
+        /* Footer */
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #a0a0c0;
+            font-weight: 300;
+            font-size: 0.9rem;
+            padding: 20px;
+            width: 100%;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .link-container {
+                padding: 20px;
+            }
+            
+            .video-placeholder h3 {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .link-form {
+                gap: 12px;
+            }
+            
+            .submit-btn {
+                padding: 14px 20px;
+            }
+            
+            .video-placeholder {
+                padding: 30px 15px;
+            }
+            
+            .video-placeholder i {
+                font-size: 3rem;
+            }
+        }
+
+        /* Error message styling */
+        .error-message {
+            background: rgba(255, 0, 0, 0.1);
+            color: darkmagenta;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            font-weight: 500;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fab fa-youtube"></i> Youdetox</h1>
+            <p class="subtitle">You are now safe from distraction and cookie.</p>
+        </header>
+        
+        <!-- Spacer element that will expand when container is minimized -->
+        <div class="minimized-spacer" id="minimizedSpacer"></div>
+        
+        <div class="link-container" id="linkContainer">
+            <form class="link-form" id="videoForm">
+                <div class="form-header" id="formHeader">
+                    <h2>Enter YouTube Video URL</h2>
+                </div>
+                
+                <div class="url-input-container">
+                    <label for="videoUrl">YouTube Video Link</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-link"></i>
+                        <input type="url" id="videoUrl" placeholder="Paste Link Here" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-play-circle"></i> Play Video
+                </button>
+            </form>
+        </div>
+        
+        <div class="video-placeholder" id="videoPlaceholder">
+            <i class="fab fa-youtube"></i>
+            <h3>Youdetox</h3>
+            <p>Paste any YouTube video link and play it directly on this site</p>
+        </div>
+        
+        <div class="video-container" id="videoContainer">
+            <div class="video-wrapper">
+                <iframe id="ytPlayer" frameborder="0" allowfullscreen
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+                </iframe>
+            </div>
+        </div>
+        
+        <footer> Developed by Akash Dutta (@thedhannomorich)
+        </footer>
+    </div>
+
+    <script>
+        // DOM elements
+        const videoForm = document.getElementById('videoForm');
+        const videoUrl = document.getElementById('videoUrl');
+        const videoContainer = document.getElementById('videoContainer');
+        const videoPlaceholder = document.getElementById('videoPlaceholder');
+        const ytPlayer = document.getElementById('ytPlayer');
+        const linkContainer = document.getElementById('linkContainer');
+        const formHeader = document.getElementById('formHeader');
+        const minimizedSpacer = document.getElementById('minimizedSpacer');
+        
+        // Track if we have a video loaded
+        let videoLoaded = false;
+        let currentVideoId = null;
+        
+        // Handle form submission
+        videoForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const url = videoUrl.value.trim();
+            
+            if (!url) {
+                showError("Please enter a YouTube URL");
+                return;
+            }
+            
+            const videoId = extractVideoId(url);
+            
+            if (!videoId) {
+                showError("Invalid YouTube URL. Please check and try again.");
+                return;
+            }
+            
+            // If it's the same video, don't reload
+            if (videoLoaded && currentVideoId === videoId) {
+                return;
+            }
+            
+            // Set the current video ID
+            currentVideoId = videoId;
+            
+            // Hide placeholder and show video container
+            videoPlaceholder.style.display = 'none';
+            
+            // Clear any existing iframe to prevent memory leaks
+            ytPlayer.src = '';
+            
+            // Set iframe source with YouTube embed URL
+            ytPlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&controls=1&showinfo=0`;
+            
+            // Show video container with fade animation
+            videoContainer.style.display = 'block';
+            setTimeout(() => {
+                videoContainer.classList.add('show');
+            }, 50);
+            
+            // Minimize the link container with spacer
+            minimizeLinkContainer();
+            
+            // Set video loaded flag
+            videoLoaded = true;
+            
+            // Scroll to video for better mobile experience
+            setTimeout(() => {
+                videoContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 500);
+        });
+        
+        // Function to minimize link container with spacer
+        function minimizeLinkContainer() {
+            setTimeout(() => {
+                // Calculate the height of the minimized container
+                const containerHeight = linkContainer.offsetHeight;
+                
+                // Activate the spacer first
+                minimizedSpacer.classList.add('active');
+                
+                // Then minimize the container
+                setTimeout(() => {
+                    linkContainer.classList.add('minimized');
+                    formHeader.classList.add('minimized');
+                }, 50);
+            }, 300);
+        }
+        
+        // Function to restore link container
+        function restoreLinkContainer() {
+            linkContainer.classList.remove('minimized');
+            formHeader.classList.remove('minimized');
+            minimizedSpacer.classList.remove('active');
+        }
+        
+        // Extract YouTube video ID from various URL formats
+        function extractVideoId(url) {
+            // Handle youtu.be format first
+            const youtuBeMatch = url.match(/(?:youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/|youtube\.com\/shorts\/)([^#&?]{11})/);
+            if (youtuBeMatch && youtuBeMatch[1]) {
+                return youtuBeMatch[1];
+            }
+            
+            // Handle watch?v= format
+            const regExp = /^.*(?:youtube\.com\/watch\?v=|youtube\.com\/watch\?.*&v=)([^#&?]{11}).*/;
+            const match = url.match(regExp);
+            if (match && match[1]) {
+                return match[1];
+            }
+            
+            // Handle youtu.be without protocol
+            const shortMatch = url.match(/youtu\.be\/([^#&?]{11})/);
+            if (shortMatch && shortMatch[1]) {
+                return shortMatch[1];
+            }
+            
+            return null;
+        }
+        
+        // Show error message
+        function showError(message) {
+            // Remove any existing error
+            const existingError = document.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            // Create error element
+            const errorEl = document.createElement('div');
+            errorEl.className = 'error-message';
+            errorEl.textContent = message;
+            
+            // Insert after the input wrapper
+            const inputWrapper = document.querySelector('.input-wrapper');
+            inputWrapper.parentNode.insertBefore(errorEl, inputWrapper.nextSibling);
+            
+            // Remove error after 5 seconds
+            setTimeout(() => {
+                if (errorEl.parentNode) {
+                    errorEl.remove();
+                }
+            }, 5000);
+            
+            // Focus back on input
+            videoUrl.focus();
+        }
+        
+        // Handle refresh protection - browser default only
+        window.addEventListener('beforeunload', function(e) {
+            if (videoLoaded) {
+                // Only show browser's default confirmation
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+        
+        // Reset everything on page load
+        function resetPage() {
+            // Clear any stored data
+            sessionStorage.clear();
+            
+            // Reset UI
+            videoPlaceholder.style.display = 'flex';
+            videoContainer.classList.remove('show');
+            videoContainer.style.display = 'none';
+            
+            // Restore link container
+            restoreLinkContainer();
+            
+            // Clear inputs
+            videoUrl.value = '';
+            
+            // Clear iframe source to stop any playing video
+            ytPlayer.src = '';
+            
+            // Remove any error messages
+            const errorMessages = document.querySelectorAll('.error-message');
+            errorMessages.forEach(error => error.remove());
+            
+            // Reset flags
+            videoLoaded = false;
+            currentVideoId = null;
+        }
+        
+        // Initialize page on load
+        window.addEventListener('load', function() {
+            resetPage();
+        
+        // Handle back/forward browser navigation
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                resetPage();
+            }
+        });
+        
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Focus on input when Ctrl/Cmd + L is pressed
+            if ((e.ctrlKey || e.metaKey) && e.key === 'l') {
+                e.preventDefault();
+                videoUrl.focus();
+                videoUrl.select();
+            }
+            
+            // Submit form with Enter (when input is focused)
+            if (e.key === 'Enter' && document.activeElement === videoUrl) {
+                // The form submit event will handle it
+            }
+            
+            // Escape to reset
+            if (e.key === 'Escape' && videoLoaded) {
+                // Optionally add a reset functionality
+                // resetPage();
+            }
+        });
+        
+        // Improve mobile experience
+        document.addEventListener('touchstart', function() {}, {passive: true});
+        
+        // Fix for iOS Safari 100vh issue
+        function setVH() {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+        
+        setVH();
+        window.addEventListener('resize', setVH);
+    </script>
+</body>
+</html>
